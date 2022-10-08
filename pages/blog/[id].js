@@ -14,21 +14,21 @@ const Post = ({ htmlString, data, image}) => {
       </Head>
       <div className={styles.post}>
         <Image
-          src={`http://localhost:1337${image}`}
+          src={`${process.env.NEXT_PUBLIC_STRAPI_ASSETS+image}`}
           alt="blog-post"
           priority={true}
           className="rounded-full"
           width={600}
           height={400}
         />
-      <div dangerouslySetInnerHTML={{ __html: htmlString }} />
+        <div dangerouslySetInnerHTML={{ __html: htmlString }} />
       </div>
     </>
   );
 };
 
 export const getStaticPaths = async () => {
-const resulting = await fetch(`http://localhost:1337/api/blogs`);
+const resulting = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/blogs`);
 const result = await resulting.json();
 
 // console.log("paths", result)
@@ -45,7 +45,7 @@ export const getStaticProps = async ({params}) => {
   // const markdownWithMeta = fs.readFileSync(path.join("posts", slug + ".md")).toString()
   // console.log("params", params);
   const res = await fetch(
-    `http://localhost:1337/api/blogs/${params.id}?populate=image`
+    `${process.env.NEXT_PUBLIC_STRAPI_URL}/blogs/${params.id}?populate=image`
   );
   const markdownWithMeta = await res.json();
   const parsedMarkdown = matter(markdownWithMeta.data.attributes.draft);

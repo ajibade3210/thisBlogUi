@@ -21,7 +21,11 @@ export default function Home({ images, result }) {
                 <Link href={`/blog/${result.id}`}>
                   <a>
                     <Image
-                      src={`http://localhost:1337${result.attributes.image.data.attributes.formats.large.url}`}
+                      src={`${
+                        process.env.NEXT_PUBLIC_STRAPI_ASSETS +
+                        result.attributes.image.data.attributes.formats.large
+                          .url
+                      }`}
                       alt="blog-post"
                       priority={true}
                       className="rounded-full"
@@ -46,15 +50,13 @@ export default function Home({ images, result }) {
 
 export const getStaticProps = async () => {
   const resulting = await fetch(
-    `http://localhost:1337/api/blogs?populate=image`
+    `${process.env.NEXT_PUBLIC_STRAPI_URL}/blogs?populate=image`
   );
   const result = await resulting.json()
 
   const images = result.data.map(e =>
     e.attributes.image.data.attributes.formats.thumbnail.url
   );
-  // console.log(images)
-
   return {
     props: {
       images,
